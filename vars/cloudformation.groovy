@@ -87,6 +87,14 @@ def handleActionRequest(cf, config){
         success = true
       }
       break
+    case 'create-async':
+      if(!doesStackExist(cf,config.stackName)) {
+        create(cf, config)
+      } else {
+        println "Environment ${config.stackName} already Exists"
+        success = true
+      }
+      break
     case 'delete':
       delete(cf, config)
       success = wait(cf, config.stackName, StackStatus.DELETE_COMPLETE)
@@ -97,7 +105,12 @@ def handleActionRequest(cf, config){
       } else {
         success = true
       }
-    break
+      break
+    case 'wait':
+      if(doesStackExist(cf,config.stackName)) {
+        success = wait(cf, config.stackName, StackStatus.CREATE_COMPLETE)
+      }
+      break
   }
   if(!success) {
     printFailedStackEvents(cf, config.stackName, config.region)
