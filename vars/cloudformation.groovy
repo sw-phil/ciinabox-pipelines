@@ -53,6 +53,10 @@ def call(body) {
     throw new GroovyRuntimeException("Either action or queryType (or both) must be specified")
   }
 
+  if(config.action == 'create-async' && config.queryType) {
+    throw new GroovyRuntimeException("action 'create-async' not-compatible with queryType")
+  }
+
   if(config.action){
     handleActionRequest(cf, config)
   }
